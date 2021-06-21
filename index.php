@@ -5,9 +5,16 @@ include './example_persons_array.php';
 /*
     Принимает как аргумент одну строку — склеенное ФИО. 
     Возвращает как результат массив из трёх элементов 
-    с ключами ‘name’, ‘surname’ и ‘patronomyc’.
+    с ключами 'name', 'surname' и 'patronomyc'.
 */
-function getPartsFromFullname() {}
+function getPartsFromFullname($fullname) {
+    $fullname = explode(' ', $fullname);
+    return [
+        'surname' => $fullname[0],
+        'name' => $fullname[1],
+        'patronomyc' => $fullname[2],
+    ];
+}
 
 /*
     Принимает как аргумент три строки — фамилию, имя и отчество. 
@@ -30,5 +37,7 @@ function getGenderDescription() {}
 
 /* Определение «идеальной» пары. */
 function getPerfectPartner() {}
+
+/* ################################################ */
 
 ?>
