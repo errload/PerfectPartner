@@ -7,7 +7,8 @@ include './example_persons_array.php';
     Возвращает как результат массив из трёх элементов 
     с ключами 'name', 'surname' и 'patronomyc'.
 */
-function getPartsFromFullname($fullname) {
+function getPartsFromFullname($fullname)
+{
     $fullname = explode(' ', $fullname);
     return [
         'surname' => $fullname[0],
@@ -20,7 +21,10 @@ function getPartsFromFullname($fullname) {
     Принимает как аргумент три строки — фамилию, имя и отчество. 
     Возвращает как результат их же, но склеенные через пробел.
 */
-function getFullnameFromParts() {}
+function getFullnameFromParts($surname, $name, $patronomyc)
+{
+    return implode(' ', [$surname, $name, $patronomyc]);
+}
 
 /*
     Принимает как аргумент строку, содержащую ФИО вида 
