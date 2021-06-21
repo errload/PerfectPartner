@@ -38,7 +38,27 @@ function getShortName($fullname) {
 }
 
 /* Принимающет как аргумент строку, содержащую ФИО, для определения пола. */
-function getGenderFromName() {}
+function getGenderFromName($fullname) {
+    $sum = 0;
+    $fullname = getPartsFromFullname($fullname);
+
+    $surname = $fullname['surname'];
+    $name = $fullname['name'];
+    $patronomyc = $fullname['patronomyc'];
+
+    if ( mb_substr($surname, -2, 2) === 'ва' ) $sum -= 1;
+    if ( mb_substr($surname, -1, 1) === 'в' ) $sum += 1;
+
+    if ( mb_substr($name, -1, 1) === 'а' ) $sum -= 1;
+    if ( mb_substr($name, -1, 1) === 'й' || mb_substr($name, -1, 1) === 'н' ) $sum += 1;
+
+    if ( mb_substr($patronomyc, -3, 3) === 'вна' ) $sum -= 1;
+    if ( mb_substr($patronomyc, -2, 2) === 'ич' ) $sum += 1;
+
+    if ($sum > 0) return 1;
+    elseif ($sum < 0) return -1;
+    elseif ($sum === 0) return 0;
+}
 
 /* Определение полового состава аудитории. */
 function getGenderDescription() {}
@@ -47,5 +67,6 @@ function getGenderDescription() {}
 function getPerfectPartner() {}
 
 /* ################################################ */
+echo getGenderFromName('Громов Александр Иванович');
 
 ?>
