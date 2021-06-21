@@ -7,9 +7,9 @@ include './example_persons_array.php';
     Возвращает как результат массив из трёх элементов 
     с ключами 'name', 'surname' и 'patronomyc'.
 */
-function getPartsFromFullname($fullname)
-{
+function getPartsFromFullname($fullname) {
     $fullname = explode(' ', $fullname);
+
     return [
         'surname' => $fullname[0],
         'name' => $fullname[1],
@@ -21,8 +21,7 @@ function getPartsFromFullname($fullname)
     Принимает как аргумент три строки — фамилию, имя и отчество. 
     Возвращает как результат их же, но склеенные через пробел.
 */
-function getFullnameFromParts($surname, $name, $patronomyc)
-{
+function getFullnameFromParts($surname, $name, $patronomyc) {
     return implode(' ', [$surname, $name, $patronomyc]);
 }
 
@@ -31,7 +30,12 @@ function getFullnameFromParts($surname, $name, $patronomyc)
     «Иванов Иван Иванович» и возвращающую строку вида «Иван И.», 
     где сокращается фамилия и отбрасывается отчество.
 */
-function getShortName() {}
+function getShortName($fullname) {
+    $fullname = getPartsFromFullname($fullname);
+    $surname = mb_substr($fullname['surname'], 0, 1);
+
+    return "${fullname['name']} ${surname}.";
+}
 
 /* Принимающет как аргумент строку, содержащую ФИО, для определения пола. */
 function getGenderFromName() {}
