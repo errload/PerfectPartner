@@ -2,11 +2,7 @@
 
 include './example_persons_array.php';
 
-/*
-    Принимает как аргумент одну строку — склеенное ФИО. 
-    Возвращает как результат массив из трёх элементов 
-    с ключами 'name', 'surname' и 'patronomyc'.
-*/
+/* Разбиение ФИО */
 function getPartsFromFullname($fullname) {
     $fullname = explode(' ', $fullname);
 
@@ -17,19 +13,12 @@ function getPartsFromFullname($fullname) {
     ];
 }
 
-/*
-    Принимает как аргумент три строки — фамилию, имя и отчество. 
-    Возвращает как результат их же, но склеенные через пробел.
-*/
+/* Объединение ФИО */
 function getFullnameFromParts($surname, $name, $patronomyc) {
     return implode(' ', [$surname, $name, $patronomyc]);
 }
 
-/*
-    Принимает как аргумент строку, содержащую ФИО вида 
-    «Иванов Иван Иванович» и возвращающую строку вида «Иван И.», 
-    где сокращается фамилия и отбрасывается отчество.
-*/
+/* Сокращение ФИО */
 function getShortName($fullname) {
     $fullname = getPartsFromFullname($fullname);
     $surname = mb_substr($fullname['surname'], 0, 1);
@@ -37,7 +26,7 @@ function getShortName($fullname) {
     return "${fullname['name']} ${surname}.";
 }
 
-/* Принимающет как аргумент строку, содержащую ФИО, для определения пола. */
+/* Определение пола по ФИО */
 function getGenderFromName($fullname) {
     $sum = 0;
     $fullname = getPartsFromFullname($fullname);
@@ -60,7 +49,7 @@ function getGenderFromName($fullname) {
     elseif ($sum === 0) return 0;
 }
 
-/* Определение полового состава аудитории. */
+/* Определение возрастно-полового состава */
 function getGenderDescription($array) {
     $mens = array_filter($array, function($val) {
         if (getGenderFromName($val['fullname']) === 1) return $val['fullname'];
@@ -91,9 +80,46 @@ function getGenderDescription($array) {
     EOT;
 }
 
-/* Определение «идеальной» пары. */
-function getPerfectPartner() {}
+/* Случайный человек с противоположным полом */
+function getRandomHuman($array, $gender) {
+    $randomKey = array_rand($array, 1);
+    $randomHuman = $array[$randomKey]['fullname'];
+    $randomGender = getGenderFromName($randomHuman);
+
+    if ($randomGender === 0) return getRandomHuman($array, $gender);
+    if ($randomGender === $gender) return getRandomHuman($array, $gender);
+
+    return $randomHuman;
+}
+
+/* Идеальный подбор пары */
+function getPerfectPartner($surname, $name, $patronomyc, $array) {
+    $fullname = getFullnameFromParts($surname, $name, $patronomyc);
+    $fullname = mb_convert_case($fullname, MB_CASE_TITLE_SIMPLE);
+
+    $gender = getGenderFromName($fullname);
+    if ($gender === 0) return 'Пол неопределен, пару подобрать невозможно.';
+
+    $randomHuman = getRandomHuman($array, $gender);
+
+    $fullname = getShortName($fullname);
+    $randomHuman = getShortName($randomHuman);
+    $result = round(rand(5000, 10000) / 100, 2);
+
+    return <<<EOT
+    $fullname + $randomHuman = <br/>
+    ♡ Идеально на {$result}% ♡
+    EOT;
+}
 
 /* ################################################ */
+
+echo getGenderDescription($example_persons_array);
+echo '<hr/>';
+echo getPerfectPartner('ГРОМОВ', 'АлекСАндР', 'иванович', $example_persons_array);
+echo '<hr/>';
+echo getPerfectPartner('Шматко', 'Антонина', 'Сергеевна', $example_persons_array);
+echo '<hr/>';
+echo getPerfectPartner('аль-Хорезми', 'Мухаммад', 'ибн-Муса', $example_persons_array);
 
 ?>
