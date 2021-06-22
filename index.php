@@ -61,12 +61,39 @@ function getGenderFromName($fullname) {
 }
 
 /* Определение полового состава аудитории. */
-function getGenderDescription() {}
+function getGenderDescription($array) {
+    $mens = array_filter($array, function($val) {
+        if (getGenderFromName($val['fullname']) === 1) return $val['fullname'];
+    });
+
+    $womens = array_filter($array, function($val) {
+        if (getGenderFromName($val['fullname']) === -1) return $val['fullname'];
+    });
+
+    $undefined = array_filter($array, function($val) {
+        if (getGenderFromName($val['fullname']) === 0) return $val['fullname'];
+    });
+
+    $mens = count($mens);
+    $womens = count($womens);
+    $undefined = count($undefined);
+
+    $mens = round($mens / count($array) * 100, 1);
+    $womens = round($womens / count($array) * 100, 1);
+    $undefined = round($undefined / count($array) * 100, 1);
+
+    return <<<EOT
+    Гендерный состав аудитории: <br/>
+    --------------------------- <br/>
+    Мужчины - {$mens}% <br/>
+    Женщины - {$womens}% <br/>
+    Не удалось определить - {$undefined}% <br/>
+    EOT;
+}
 
 /* Определение «идеальной» пары. */
 function getPerfectPartner() {}
 
 /* ################################################ */
-echo getGenderFromName('Громов Александр Иванович');
 
 ?>
